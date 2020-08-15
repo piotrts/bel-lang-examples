@@ -1,0 +1,14 @@
+(set defalph "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+
+(def randstr (l|number (o alph))
+  (withs (alph* (or alph defalph)
+         acc nil
+         al (len alph*))
+    (repeat l
+      (zap [push ((inc (rand al)) alph*) acc]
+           acc))
+    acc))
+
+"should take several minutes to complete :)"
+(prn (randstr 16))
+
