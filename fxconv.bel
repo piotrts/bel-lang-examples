@@ -1,0 +1,26 @@
+(def currency (x)
+  (and (string x) (= 3 (len x))))
+
+(def fxconv (currencies amt|number (from|currency . to|currency) (o triang))
+  (let getrate (fn (currencies from to)
+                 (cdr (get to (get from currencies))))
+    (or
+      ((only [* _ amt]) (getrate currencies from to))
+      ((only [/ amt _]) (getrate currencies to from))
+      (and
+        triang
+        (aif (getrate currencies from triang)
+          ((only (part * it amt)) (getrate currencies triang to)))))))
+
+
+
+(set examplerates
+  '(("EUR" . (("USD" . 1.20)
+              ("JPY" . 10.00)))
+    ("PLN" . (("EUR" . 3.30)
+              ("USD" . 0.25)))))
+
+(prn "test 1 = " (= (* 2.00 1.20)  (fxconv examplerates 2.00 '("EUR" . "USD"))))
+(prn "test 2 = " (= (* 3.00 10.00) (fxconv examplerates 3.00 '("EUR" . "JPY"))))
+(prn "test 3 = " (= (/ 4.00 0.25)  (fxconv examplerates 4.00 '("USD" . "PLN"))))
+(prn "test 4 = " (= (* 5.00 3.30 10.00) (fxconv examplerates 5.00 '("PLN" . "JPY") "EUR")))
