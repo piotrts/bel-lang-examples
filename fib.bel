@@ -1,0 +1,14 @@
+(mac com _ nil)
+
+(com "this is an attempt to be clever")
+
+(def fib (m)
+  (let u (cons 0 1)
+    (com "'drain' collects all the partial results?")
+    (drain (set u (cons (cdr u) (+ (car u) (cdr u))))
+           (fn (_)
+             (<= (-- m) 0)))
+    (car u)))
+
+(com "wait for 25sec :)")
+(prn (fib 14))
